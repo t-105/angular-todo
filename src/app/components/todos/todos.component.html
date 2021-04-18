@@ -1,32 +1,44 @@
 <div class="todos">
     <!-- Form Section -->
-    <form (submit)="addTodo()">
-        <input type="text" name="input-title" minlength="2" ng-required="true" placeholder="Enter your title..."
-            class="todo-input" [(ngModel)]="inputTitle" #title='ngModel' />
-        <div *ngIf="title.invalid && (title.dirty)">
-            <p *ngIf="title.errors.required">Title is required</p>
-            <p *ngIf="title.errors.minlength">Title must be at least 2 characters long!</p>
-        </div>
-
-        <input type="text" name="input-description" minlength="5" ng-required="true"
-            placeholder="Please enter your description..." class="todo-input" [(ngModel)]="inputDescription"
-            #desc='ngModel' />
-        <div *ngIf="desc.invalid && (desc.dirty)">
-            <p *ngIf="desc.errors.required">Description is required</p>
-            <p *ngIf="desc.errors.minlength">Desctiption must be at least 5 characters long!</p>
-        </div>
-
-        <input type="date" name="input-duedate" ng-required="true" placeholder="Please select your due date..."
-            class="todo-date" [(ngModel)]="inputDueDate" />
+    <form [formGroup]="todoForm" (submit)="addTodo()">
+        <label for="inputTitle">Title</label>
+        <input type="text" name="input-title" placeholder="Enter your title..." class="todo-input" id="inputTitle"
+            formControlName="inputTitle" />
+        <p class="lblError"
+            *ngIf="todoForm.get('inputTitle').hasError('minlength') && !todoForm.get('inputTitle').pristine"> Title must
+            be at least 2 characters long!
+        </p>
+        <p class="lblError"
+            *ngIf="todoForm.get('inputTitle').hasError('required') && !todoForm.get('inputTitle').pristine">
+            Title is required!
+        </p>
+        <label for="inputDescription">Description</label>
+        <input type="text" name="input-description" placeholder="Please enter your description..." class="todo-input"
+            id="inputDescription" formControlName="inputDescription" />
+        <p class="lblError"
+            *ngIf="todoForm.get('inputDescription').hasError('minlength') && !todoForm.get('inputDescription').pristine">
+            Description must be at least 5 characters long!
+        </p>
+        <p class="lblError"
+            *ngIf="todoForm.get('inputDescription').hasError('required') && !todoForm.get('inputDescription').pristine">
+            Description is required!
+        </p>
+        <label for="inputDueDate">Due Date</label>
+        <input type="date" name="input-duedate" placeholder="Please select your due date..." class="todo-date"
+            id="inputDueDate" formControlName="inputDueDate" />
+        <p class="lblError"
+            *ngIf="todoForm.get('inputDueDate').hasError('required') && !todoForm.get('inputDueDate').pristine">
+            Date is required
+        </p>
         <br>
         <br>
-        <h3>Tags:</h3>
-
-        <div *ngFor="let item of tags">
-            <input type="checkbox" name="{{item.name}}" (change)="onChange()" [(ngModel)]="item.isSelected">
-            <label>{{item.name}}</label>
+        <h3 class="tag-title">Tags:</h3>
+        <div *ngFor="let tag of tags">
+            <input type="checkbox" name="{{tag.name}}" id="input{{tag.name}}" formControlName="input{{tag.name}}">
+            <label class="checkboxLabel" for="input{{tag.name}}">{{tag.name}}</label>
         </div>
-        <button type="submit" class="todo-submit">Submit</button>
+        <br>
+        <button type="submit" class="todo-submit" [disabled]="todoForm.invalid">Submit</button>
     </form>
     <!-- End of form section -->
 
@@ -38,13 +50,13 @@
     <!-- Sorting Section -->
     <div class="sort-div">
         <h2>Sort by: </h2>
-        <button class="sort-btn" (click)="filterTodoAlph()">Title</button>
-        <button class="sort-btn" (click)="filterTodoDate()">Sort by date</button>
+        <button class="sort-btn" (click)="setOrderByKey('title')">Title</button>
+        <button class="sort-btn" (click)="setOrderByKey('duedate')">Sort by date</button>
     </div>
     <div class="sort-div">
-        <h2> Sort by Tag:</h2>
-        <div *ngFor="let item of tags">
-            <button class="sort-btn" (click)="tagFilter(item.name)" name="{{item.name}}">{{item.name}}</button>
+        <h2> Filter by Tag:</h2>
+        <div *ngFor="let tag of tags">
+            <button class="sort-btn" (click)="tagFilter(tag.name)" name="{{tag.name}}">{{tag.name}}</button>
         </div>
         <button class="sort-btn" (click)="resetFilter()">Reset</button>
     </div>
@@ -59,14 +71,15 @@
         <h3 class="content">Tags</h3>
         <h3 class="delete">Remove</h3>
     </div>
-    <div *ngFor="let todo of todos |filter:searchTag ; let i = index;" class="todo {{ (todo.completed ? 'done': '') }}">
+    <div *ngFor="let todo of todos |filter: searchTag |sort: orderByKey ; let i = index;"
+        class="todo {{ (todo.completed ? 'done': '') }}">
         <div class="id">{{ i + 1 }}</div>
         <div class="title"> {{ todo.title }}</div>
         <div class=" content">{{ todo.content }}</div>
         <div class=" content">{{ todo.duedate | date }}</div>
         <div class=" tags">
-            <div *ngFor="let item of todo.itemTags; let j = index">
-                <div class="content">{{ todo.itemTags[j].name }}</div>
+            <div *ngFor="let tag of todo.itemTags;">
+                <div class=" content">{{ tag.name }}</div>
             </div>
         </div>
         <button class=" delete" (click)="deleteTodo(i)">Remove</button>

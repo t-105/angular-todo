@@ -1,4 +1,6 @@
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Todo, Tags } from '../../models/Todo';
 
 @Component({
@@ -13,16 +15,27 @@ export class TodosComponent implements OnInit {
   tags: Tags[];
 
   searchTag = '';
-  inputTitle:string = "";
-  inputDescription:string = "";
-  inputDueDate:string = "";
-  tag:string = "";
+  orderByKey=''
+
+  todoForm: FormGroup;
 
   constructor() { }
 
   ngOnInit(): void {
     this.getTags();
-    this.todos = []
+    this.initForm();
+    this.todos = [];
+  }
+
+  initForm(): void {
+    this.todoForm = new FormGroup({
+      inputTitle: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+      inputDescription: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+      inputDueDate: new FormControl(null, Validators.required),
+      inputPersonal: new FormControl(false),
+      inputWork: new FormControl(false),
+      inputImportant: new FormControl(false),
+    })
   }
 
   // Get each tag to be used for tags inputs
@@ -34,10 +47,6 @@ export class TodosComponent implements OnInit {
     ]
   }
 
-  // On change of a tag we will be changin the isSelected from true/false
-  onChange () {
-    console.log(this.tags)
-  }
 
   // On click of a filter, make the searchTag equal to name of button being pressed, this will be passed to custom pipe
   tagFilter(name) {
@@ -51,46 +60,39 @@ export class TodosComponent implements OnInit {
 
   // Method to add a todo
   addTodo () {
+    
     // This will filter through all the current tags, if isSelected is true, we will include them when adding a todo
     let filteredItemTags = this.tags.filter((tag) => tag.isSelected === true);
+    if (this.todoForm.get('inputPersonal').value) {
+      filteredItemTags.push(this.tags[0]);
+    }
+    if (this.todoForm.get('inputWork').value) {
+      filteredItemTags.push(this.tags[1]);
+    }
+    if (this.todoForm.get('inputImportant').value) {
+      filteredItemTags.push(this.tags[2]);
+    }
 
     // push all inputs from form into the todos array of objects
     this.todos.push({
-      title: this.inputTitle,
-      content: this.inputDescription,
-      duedate: this.inputDueDate,
+      title: this.todoForm.get('inputTitle').value,
+      content: this.todoForm.get('inputDescription').value,
+      duedate: this.todoForm.get('inputDueDate').value,
       itemTags: filteredItemTags,
       completed: false
     })
 
-    // reset the input fields
-    this.inputTitle = "";
-    this.inputDueDate ="";
-    this.inputDescription=""
-    this.tags.forEach(tag => {
-      tag.isSelected = false
-    })
+    this.initForm();
   }
   
-  // Sort the todos in Alphabetical order by title using .sort
-  filterTodoAlph () {
-    this.todos.sort(function (a, b) {
-      if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;
-      else if(a.title.toLowerCase() > b.title.toLowerCase()) return 1;
-      return 0;
-    });
-  }
-
-  // Sort the todos in sequential order by date using .sort
-  filterTodoDate () {
-    this.todos.sort((a, b) => {
-      return <any>new Date(a.duedate) - <any>new Date(b.duedate);
-    });
+  setOrderByKey(name) {
+    this.orderByKey = name;
   }
 
   // When clicking the reset button, all todo items will be shown, rather than just the filtered ones.
   resetFilter() {
-    this.searchTag=""
+    this.searchTag='';
+    this.orderByKey='';
   }
 
 }
