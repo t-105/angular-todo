@@ -1,0 +1,72 @@
+.sort-div {
+  display: flex;
+  margin-bottom: 1rem;
+}
+h2 {
+  margin-left: 1rem;
+}
+
+.sort-btn {
+  width: 5rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
+.table-header {
+  display: flex;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+  border-top: 2px solid black;
+}
+
+.todo {
+  display: flex;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+}
+
+.todo:nth-child(even) {
+  background-color: #eee;
+}
+
+.todo:last-of-type {
+  border-bottom: 0;
+}
+
+.todo-input {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  appearance: none;
+  border: none;
+  background-color: #f3f3f3;
+  margin-top: 15px;
+  font-size: 20px;
+  outline: none;
+}
+
+.todo-submit {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 5px;
+  outline: none;
+  background-color: #5448fe;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 18px;
+  font-weight: 700;
+}
+input {
+  margin-top: 1rem;
+}
