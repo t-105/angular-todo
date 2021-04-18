@@ -75,8 +75,8 @@ export class TodosComponent implements OnInit {
   // Sort the todos in Alphabetical order by title using .sort
   filterTodoAlph () {
     this.todos.sort(function (a, b) {
-      if(a.title < b.title) return -1;
-      else if(a.title > b.title) return 1;
+      if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+      else if(a.title.toLowerCase() > b.title.toLowerCase()) return 1;
       return 0;
     });
   }

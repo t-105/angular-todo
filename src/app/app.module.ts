@@ -10,7 +10,7 @@ import { FilterPipe } from './Pipes/filter.pipe';
   declarations: [
     AppComponent,
     TodosComponent,
-    FilterPipe
+    FilterPipe,
   ],
   imports: [
     BrowserModule,
