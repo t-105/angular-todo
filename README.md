@@ -29,12 +29,12 @@
 
 ### Running the todo application
 
-- Locate the zip you downloaded called amesite-coding-challenge.zip. Please unzip the folder, please take note of where the unziped folder is on your computer.
-- Once you have the folder unziped, open a new terminal.
+- Please clone this project to your local machine.
+- Once you have the project downloaded, open a new terminal.
 
 ![Open-teminal](images/Screenshot_11.png)
 
-- Use the command cd to navigate to the unzipped folder's location. For example, if I downloaded the folder to my downloads folder, I would type `cd Downloads/amesite-challenge` from my root directory.
+- Use the command cd to navigate to the downloaded folder's location. For example, if I downloaded the folder to my downloads folder, I would type `cd Downloads/amesite-challenge` from my root directory.
 
 ![Open-teminal](images/Screenshot_7.png)
 
